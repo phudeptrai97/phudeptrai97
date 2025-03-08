@@ -143,15 +143,15 @@
         }
 
         @keyframes shake {
-		0% { transform: translate(-50%, -50%) translateX(0); }
-		25% { transform: translate(-50%, -50%) translateX(-20px); }
-		50% { transform: translate(-50%, -50%) translateX(20px); }
-		75% { transform: translate(-50%, -50%) translateX(-20px); }
-		100% { transform: translate(-50%, -50%) translateX(0); }
-}
-	.shake-cup {
-		animation: shake 0.5s ease-in-out;
-}
+            0% { transform: translate(-50%, -50%) translateX(0); }
+            25% { transform: translate(-50%, -50%) translateX(-20px); }
+            50% { transform: translate(-50%, -50%) translateX(20px); }
+            75% { transform: translate(-50%, -50%) translateX(-20px); }
+            100% { transform: translate(-50%, -50%) translateX(0); }
+        }
+        .shake-cup {
+            animation: shake 0.5s ease-in-out;
+        }
     </style>
 </head>
 <body>
@@ -164,7 +164,7 @@
         Trình duyệt của bạn không hỗ trợ âm thanh.
     </audio>
     <audio id="endSound">
-        <source src="end.mp3" type="audio/mpeg">
+        <source src="end.WAV" type="audio/wav">
         Trình duyệt của bạn không hỗ trợ âm thanh.
     </audio>
 
@@ -258,7 +258,7 @@
         let results = []; // Lưu trữ kết quả xúc xắc
 
         function resetCup() {
-		cup.classList.remove("cover");
+            cup.classList.remove("cover");
             cup.style.opacity = 1; // Hiển thị lại chén
             cup.style.transform = "translate(-50%, -50%)"; /* Đặt lại vị trí chén */
             resultContainer.innerHTML = ""; // Xóa kết quả cũ
@@ -299,9 +299,6 @@
                 }, 1000); // Bắt đầu fade out sau 1 giây (tổng thời gian lắc là 2 giây)
 
                 setTimeout(() => {
-                    // Phát âm thanh kết thúc
-                    endSound.play();
-
                     // Dừng hiệu ứng lắc chén
                     cup.classList.remove("shake-cup");
 
@@ -335,6 +332,9 @@
             results.forEach(result => {
                 diceElements[result].classList.add('highlight');
             });
+
+            // Phát âm thanh khi mở chén
+            endSound.play();
         });
     </script>
 </body>
