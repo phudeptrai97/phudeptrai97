@@ -55,6 +55,35 @@
             display: none;
         }
 
+        /* Hình ảnh trang trí tree.gif */
+        .tree-decoration {
+            position: fixed;
+            width: 150px; /* Kích thước 100px */
+            height: auto;
+            z-index: 1001; /* Đảm bảo hiển thị trên các phần tử khác */
+        }
+
+        /* Vị trí của tree.gif */
+        .tree-decoration.top-left {
+            top: 150px;
+            left: 550px;
+        }
+
+        .tree-decoration.top-right {
+            top: 20px;
+            right: 20px;
+        }
+
+        .tree-decoration.bottom-left {
+            bottom: 20px;
+            left: 20px;
+        }
+
+        .tree-decoration.bottom-right {
+            bottom: 20px;
+            right: 20px;
+        }
+
         .game-container {
             display: flex;
             flex-direction: column;
@@ -217,6 +246,12 @@
     </style>
 </head>
 <body>
+    <!-- Hình ảnh trang trí tree.gif -->
+    <img src="tree.gif" alt="Tree" class="tree-decoration top-left">
+    <img src="tree.gif" alt="Tree" class="tree-decoration top-right">
+    <img src="tree.gif" alt="Tree" class="tree-decoration bottom-left">
+    <img src="tree.gif" alt="Tree" class="tree-decoration bottom-right">
+
     <!-- Giao diện bên ngoài -->
     <div class="overlay" id="overlay">
         <button onclick="startGame()">Bắt đầu</button>
