@@ -12,27 +12,65 @@
             color: white;
             margin: 0;
             overflow: hidden;
-            /* Thêm hiệu ứng lấp lánh từ file Snow.gif */
             background-image: url('Snow.gif');
-            background-size: cover; /* Đảm bảo GIF phủ kín nền */
-            background-position: center; /* Căn giữa GIF */
-            background-repeat: no-repeat; /* Không lặp lại GIF */
-            background-attachment: fixed; /* Cố định nền khi cuộn trang */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
         }
+
+        /* Giao diện bên ngoài */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('CCC.png'); /* Hình nền giao diện bên ngoài */
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* Đảm bảo hiển thị trên cùng */
+        }
+
+        .overlay button {
+            padding: 15px 30px;
+            font-size: 20px;
+            cursor: pointer;
+            background-color: #FFD700;
+            color: black;
+            border: none;
+            border-radius: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .overlay button:hover {
+            background-color: #DAA520;
+        }
+
+        /* Ẩn giao diện bên ngoài khi bắt đầu */
+        .overlay.hidden {
+            display: none;
+        }
+
         .game-container {
             display: flex;
             flex-direction: column;
             align-items: center;
             margin-top: 20px;
             position: relative;
-            z-index: 2; /* Đảm bảo game nằm trên hiệu ứng lấp lánh */
+            z-index: 2;
         }
+
         .dice-grid {
             display: grid;
             grid-template-columns: repeat(3, 100px);
             grid-gap: 10px;
             margin-bottom: 20px;
         }
+
         .dice {
             width: 100px;
             height: 100px;
@@ -40,28 +78,34 @@
             border-radius: 10px;
             transition: border-color 0.3s, border-width 0.3s;
         }
+
         @keyframes blinkEffect {
             0% { border-color: gold; }
             50% { border-color: transparent; }
             100% { border-color: gold; }
         }
+
         .blinking {
             animation: blinkEffect 0.5s infinite;
         }
+
         .highlight {
             box-shadow: 0 0 20px 10px gold;
             transition: box-shadow 0.5s ease;
         }
+
         .result-container {
             display: flex;
             justify-content: center;
             margin-top: 20px;
         }
+
         .result-container img {
             width: 100px;
             height: 100px;
             margin: 5px;
         }
+
         button {
             padding: 10px 20px;
             font-size: 16px;
@@ -71,6 +115,7 @@
             border: none;
             border-radius: 5px;
         }
+
         button:hover {
             background-color: #DAA520;
         }
@@ -82,6 +127,7 @@
             margin: 20px auto;
             overflow: hidden;
         }
+
         .cup {
             position: absolute;
             width: 335px;
@@ -97,6 +143,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
         }
+
         .cup.cover {
             transform: translate(-50%, 50%);
             opacity: 0;
@@ -112,12 +159,14 @@
             align-items: center;
             z-index: 1;
         }
+
         .new-dice {
             width: 60px;
             height: 60px;
             position: absolute;
             transform: translate(-50%, -50%);
         }
+
         .new-dice img {
             width: 100%;
             height: 100%;
@@ -126,18 +175,20 @@
             border-radius: 10px;
             backface-visibility: hidden;
         }
-        /* Vị trí của 3 xúc xắc */
+
         .new-dice:nth-child(1) {
-            top: calc(50% - 20px); /* Dịch lên trên */
+            top: calc(50% - 20px);
             left: 50%;
         }
+
         .new-dice:nth-child(2) {
-            top: calc(50% + 30px); /* Dịch xuống dưới và sang trái */
-            left: calc(50% - 70px); 
+            top: calc(50% + 30px);
+            left: calc(50% - 70px);
         }
+
         .new-dice:nth-child(3) {
-            top: calc(50% + 30px); /* Dịch xuống dưới và sang phải */
-            left: calc(50% + 30px); /* 52px = 60px * cos(30°) */
+            top: calc(50% + 30px);
+            left: calc(50% + 30px);
         }
 
         .plate {
@@ -159,56 +210,64 @@
             75% { transform: translate(-50%, -50%) translateX(-30px); }
             100% { transform: translate(-50%, -50%) translateX(0); }
         }
+
         .shake-cup {
             animation: shake 0.5s ease-in-out;
         }
     </style>
 </head>
 <body>
-    <audio id="backgroundMusic" loop>
-        <source src="music.mp3" type="audio/mpeg">
-        Trình duyệt của bạn không hỗ trợ phát nhạc.
-    </audio>
-    <audio id="rollSound">
-        <source src="roll.mp3" type="audio/mpeg">
-        Trình duyệt của bạn không hỗ trợ âm thanh.
-    </audio>
-    <audio id="endSound">
-        <source src="end.WAV" type="audio/wav">
-        Trình duyệt của bạn không hỗ trợ âm thanh.
-    </audio>
-
-    <div class="result-container" id="resultContainer">
-        <!-- Hiển thị kết quả mặc định là "bầu bầu bầu" -->
-        <img src="bau.png" alt="Bầu">
-        <img src="bau.png" alt="Bầu">
-        <img src="bau.png" alt="Bầu">
+    <!-- Giao diện bên ngoài -->
+    <div class="overlay" id="overlay">
+        <button onclick="startGame()">Bắt đầu</button>
     </div>
-    <div class="cup-container">
-        <div class="cup" id="cup"></div>
-        <div class="new-dice-container">
-            <img src="plate.png" alt="Đĩa" class="plate" id="plate">
-            <div class="new-dice" id="newDice1">
-                <img src="bau.png" alt="Bầu">
-            </div>
-            <div class="new-dice" id="newDice2">
-                <img src="cua.png" alt="Cua">
-            </div>
-            <div class="new-dice" id="newDice3">
-                <img src="tom.png" alt="Tôm">
+
+    <!-- Giao diện game bên trong -->
+    <div class="game-content hidden" id="gameContent">
+        <audio id="backgroundMusic" loop>
+            <source src="music.mp3" type="audio/mpeg">
+            Trình duyệt của bạn không hỗ trợ phát nhạc.
+        </audio>
+        <audio id="rollSound">
+            <source src="roll.mp3" type="audio/mpeg">
+            Trình duyệt của bạn không hỗ trợ âm thanh.
+        </audio>
+        <audio id="endSound">
+            <source src="end.WAV" type="audio/wav">
+            Trình duyệt của bạn không hỗ trợ âm thanh.
+        </audio>
+
+        <div class="result-container" id="resultContainer">
+            <img src="bau.png" alt="Bầu">
+            <img src="bau.png" alt="Bầu">
+            <img src="bau.png" alt="Bầu">
+        </div>
+        <div class="cup-container">
+            <div class="cup" id="cup"></div>
+            <div class="new-dice-container">
+                <img src="plate.png" alt="Đĩa" class="plate" id="plate">
+                <div class="new-dice" id="newDice1">
+                    <img src="bau.png" alt="Bầu">
+                </div>
+                <div class="new-dice" id="newDice2">
+                    <img src="cua.png" alt="Cua">
+                </div>
+                <div class="new-dice" id="newDice3">
+                    <img src="tom.png" alt="Tôm">
+                </div>
             </div>
         </div>
-    </div>
 
         <button id="rollButton" onclick="rollDice()">Lắc Xúc Xắc</button>
-    <div class="game-container">
-        <div class="dice-grid" id="diceGrid">
-            <img class="dice" src="bau.png" id="dice1">
-            <img class="dice" src="cua.png" id="dice2">
-            <img class="dice" src="tom.png" id="dice3">
-            <img class="dice" src="ca.png" id="dice4">
-            <img class="dice" src="ga.png" id="dice5">
-            <img class="dice" src="nai.png" id="dice6">
+        <div class="game-container">
+            <div class="dice-grid" id="diceGrid">
+                <img class="dice" src="bau.png" id="dice1">
+                <img class="dice" src="cua.png" id="dice2">
+                <img class="dice" src="tom.png" id="dice3">
+                <img class="dice" src="ca.png" id="dice4">
+                <img class="dice" src="ga.png" id="dice5">
+                <img class="dice" src="nai.png" id="dice6">
+            </div>
         </div>
     </div>
 
@@ -222,12 +281,21 @@
         const resultContainer = document.getElementById("resultContainer");
         const diceElements = document.querySelectorAll('.dice');
         const rollButton = document.getElementById("rollButton");
+        const overlay = document.getElementById("overlay");
+        const gameContent = document.getElementById("gameContent");
 
         backgroundMusic.volume = 0.5;
 
         let isShaking = false;
-        let previousResults = []; // Lưu trữ kết quả trước đó
-        let newResults = []; // Lưu trữ kết quả mới
+        let previousResults = [];
+        let newResults = [];
+
+        // Hàm bắt đầu game
+        function startGame() {
+            overlay.classList.add("hidden"); // Ẩn giao diện bên ngoài
+            gameContent.classList.remove("hidden"); // Hiển thị giao diện game
+            backgroundMusic.play(); // Phát nhạc nền
+        }
 
         function toggleMusic() {
             if (backgroundMusic.paused) {
@@ -276,7 +344,6 @@
                 cup.classList.add("shake-cup");
                 isShaking = true;
 
-                // Tạo kết quả mới
                 newResults = [
                     Math.floor(Math.random() * 6),
                     Math.floor(Math.random() * 6),
@@ -292,12 +359,10 @@
                     isShaking = false;
                     diceElements.forEach(dice => dice.classList.remove('blinking'));
 
-                    // Đổi nút "Lắc Xúc Xắc" thành nút "Mở"
                     rollButton.textContent = "Mở";
                     rollButton.onclick = openCup;
                 }, 2000);
 
-                // Cập nhật hình ảnh xúc xắc
                 const newDiceElements = document.querySelectorAll('.new-dice');
                 newDiceElements.forEach((dice, index) => {
                     const result = newResults[index];
@@ -309,7 +374,6 @@
         function openCup() {
             if (isShaking) return;
 
-            // Nếu có kết quả mới, cập nhật và hiển thị
             if (newResults.length > 0) {
                 previousResults = newResults;
                 resultContainer.innerHTML = previousResults.map(i => `<img src="${images[i]}" alt="result" class="highlight">`).join('');
@@ -317,7 +381,6 @@
                     diceElements[result].classList.add('highlight');
                 });
             } else {
-                // Nếu không có kết quả mới, hiển thị kết quả mặc định là "bầu bầu bầu"
                 resultContainer.innerHTML = `
                     <img src="bau.png" alt="Bầu">
                     <img src="bau.png" alt="Bầu">
@@ -329,7 +392,6 @@
             plate.style.opacity = 1;
             endSound.play();
 
-            // Đổi nút "Mở" thành nút "Lắc Xúc Xắc"
             rollButton.textContent = "Lắc Xúc Xắc";
             rollButton.onclick = rollDice;
         }
