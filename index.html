@@ -272,10 +272,10 @@
     <!-- Giao diện game bên trong -->
     <div class="game-content hidden" id="gameContent">
         <!-- Nút Back -->
-        <img src="backbutton.PNG" alt="Back" class="back-button" onclick="goBack()">
+        <img src="backbutton.png" alt="Back" class="back-button" onclick="goBack()">
 
         <!-- Nút tắt/mở nhạc nền -->
-        <img src="volum.PNG" alt="Volume" class="volume-button" id="volumeButton" onclick="toggleMusic()">
+        <img src="volum.png" alt="Volume" class="volume-button" id="volumeButton" onclick="toggleMusic()">
 
         <!-- Các phần tử khác của game -->
         <audio id="backgroundMusic" loop>
@@ -366,10 +366,10 @@
         function toggleMusic() {
             if (backgroundMusic.paused) {
                 backgroundMusic.play();
-                volumeButton.src = "volum.PNG"; // Hiển thị hình ảnh bật nhạc
+                volumeButton.src = "volum.png"; // Hiển thị hình ảnh bật nhạc
             } else {
                 backgroundMusic.pause();
-                volumeButton.src = "mute.PNG"; // Hiển thị hình ảnh tắt nhạc
+                volumeButton.src = "mute.png"; // Hiển thị hình ảnh tắt nhạc
             }
         }
 
