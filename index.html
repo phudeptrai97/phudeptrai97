@@ -109,7 +109,6 @@
         }
 
         .result-container {
-            position: relative;
             display: flex;
             justify-content: center;
             margin-top: 20px;
@@ -232,14 +231,13 @@
 
         /* Style cho nút Back */
         .back-button {
-            position: absolute;
-            top: 50%; /* Căn giữa theo chiều dọc */
+            position: fixed;
+            top: 10px; /* Vị trí trên cùng */
             left: 10px; /* Vị trí bên trái */
-            transform: translateY(-50%); /* Điều chỉnh căn giữa */
-            width: 10px; /* Kích thước 10x10px */
+            width: 10px; /* Kích thước bằng 1/10 quân xúc xắc */
             height: 10px;
             cursor: pointer;
-            z-index: 3; /* Đảm bảo hiển thị trên lớp cup */
+            z-index: 1003; /* Đảm bảo hiển thị trên lớp cup */
         }
 
         .back-button:hover {
@@ -248,14 +246,13 @@
 
         /* Style cho nút tắt/mở nhạc nền */
         .volume-button {
-            position: absolute;
-            top: 50%; /* Căn giữa theo chiều dọc */
+            position: fixed;
+            top: 10px; /* Vị trí trên cùng */
             right: 10px; /* Vị trí bên phải */
-            transform: translateY(-50%); /* Điều chỉnh căn giữa */
             width: 10px; /* Kích thước 10x10px */
             height: 10px;
             cursor: pointer;
-            z-index: 3; /* Đảm bảo hiển thị trên lớp cup */
+            z-index: 1003; /* Đảm bảo hiển thị trên lớp cup */
         }
 
         .volume-button:hover {
@@ -274,6 +271,12 @@
 
     <!-- Giao diện game bên trong -->
     <div class="game-content hidden" id="gameContent">
+        <!-- Nút Back -->
+        <img src="backbutton.PNG" alt="Back" class="back-button" onclick="goBack()">
+
+        <!-- Nút tắt/mở nhạc nền -->
+        <img src="volum.PNG" alt="Volume" class="volume-button" id="volumeButton" onclick="toggleMusic()">
+
         <!-- Các phần tử khác của game -->
         <audio id="backgroundMusic" loop>
             <source src="music.mp3" type="audio/mpeg">
@@ -289,16 +292,9 @@
         </audio>
 
         <div class="result-container" id="resultContainer">
-            <!-- Nút Back -->
-            <img src="backbutton.PNG" alt="Back" class="back-button" onclick="goBack()">
-
-            <!-- Kết quả xúc xắc -->
             <img src="bau.png" alt="Bầu">
             <img src="bau.png" alt="Bầu">
             <img src="bau.png" alt="Bầu">
-
-            <!-- Nút tắt/mở nhạc nền -->
-            <img src="volum.PNG" alt="Volume" class="volume-button" id="volumeButton" onclick="toggleMusic()">
         </div>
         <div class="cup-container">
             <div class="cup" id="cup"></div>
