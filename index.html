@@ -109,6 +109,7 @@
         }
 
         .result-container {
+            position: relative;
             display: flex;
             justify-content: center;
             margin-top: 20px;
@@ -151,7 +152,7 @@
             background-position: center;
             background-repeat: no-repeat;
             cursor: pointer;
-            transition: opacity 1s ease, transform 1s ease;
+            transition: opacity 0s ease, transform 0s ease;
             z-index: 2;
             top: 50%;
             left: 50%;
@@ -214,7 +215,7 @@
             height: auto;
             z-index: 0;
             opacity: 0;
-            transition: opacity 0.5s ease;
+            transition: opacity 0s ease;
         }
 
         @keyframes shake {
@@ -227,6 +228,38 @@
 
         .shake-cup {
             animation: shake 0.5s ease-in-out;
+        }
+
+        /* Style cho nút Back */
+        .back-button {
+            position: absolute;
+            top: 50%; /* Căn giữa theo chiều dọc */
+            left: 10px; /* Vị trí bên trái */
+            transform: translateY(-50%); /* Điều chỉnh căn giữa */
+            width: 10px; /* Kích thước 10x10px */
+            height: 10px;
+            cursor: pointer;
+            z-index: 3; /* Đảm bảo hiển thị trên lớp cup */
+        }
+
+        .back-button:hover {
+            opacity: 0.8; /* Hiệu ứng khi di chuột qua */
+        }
+
+        /* Style cho nút tắt/mở nhạc nền */
+        .volume-button {
+            position: absolute;
+            top: 50%; /* Căn giữa theo chiều dọc */
+            right: 10px; /* Vị trí bên phải */
+            transform: translateY(-50%); /* Điều chỉnh căn giữa */
+            width: 10px; /* Kích thước 10x10px */
+            height: 10px;
+            cursor: pointer;
+            z-index: 3; /* Đảm bảo hiển thị trên lớp cup */
+        }
+
+        .volume-button:hover {
+            opacity: 0.8; /* Hiệu ứng khi di chuột qua */
         }
     </style>
 </head>
@@ -241,6 +274,7 @@
 
     <!-- Giao diện game bên trong -->
     <div class="game-content hidden" id="gameContent">
+        <!-- Các phần tử khác của game -->
         <audio id="backgroundMusic" loop>
             <source src="music.mp3" type="audio/mpeg">
             Trình duyệt của bạn không hỗ trợ phát nhạc.
@@ -255,9 +289,16 @@
         </audio>
 
         <div class="result-container" id="resultContainer">
+            <!-- Nút Back -->
+            <img src="backbutton.PNG" alt="Back" class="back-button" onclick="goBack()">
+
+            <!-- Kết quả xúc xắc -->
             <img src="bau.png" alt="Bầu">
             <img src="bau.png" alt="Bầu">
             <img src="bau.png" alt="Bầu">
+
+            <!-- Nút tắt/mở nhạc nền -->
+            <img src="volum.PNG" alt="Volume" class="volume-button" id="volumeButton" onclick="toggleMusic()">
         </div>
         <div class="cup-container">
             <div class="cup" id="cup"></div>
@@ -300,8 +341,9 @@
         const rollButton = document.getElementById("rollButton");
         const overlay = document.getElementById("overlay");
         const gameContent = document.getElementById("gameContent");
+        const volumeButton = document.getElementById("volumeButton");
 
-        backgroundMusic.volume = 0.5;
+        backgroundMusic.volume = 0.1;
 
         let isShaking = false;
         let previousResults = [];
@@ -317,11 +359,21 @@
             backgroundMusic.play(); // Phát nhạc nền
         }
 
+        // Hàm quay lại màn hình giao diện ban đầu
+        function goBack() {
+            overlay.classList.remove("hidden"); // Hiển thị giao diện ban đầu
+            gameContent.classList.add("hidden"); // Ẩn giao diện game
+            backgroundMusic.pause(); // Dừng nhạc nền
+        }
+
+        // Hàm bật/tắt nhạc nền
         function toggleMusic() {
             if (backgroundMusic.paused) {
                 backgroundMusic.play();
+                volumeButton.src = "volum.PNG"; // Hiển thị hình ảnh bật nhạc
             } else {
                 backgroundMusic.pause();
+                volumeButton.src = "mute.PNG"; // Hiển thị hình ảnh tắt nhạc
             }
         }
 
@@ -398,7 +450,7 @@
 
                     rollButton.textContent = "Mở";
                     rollButton.onclick = openCup;
-                }, 2000);
+                }, 1000);
 
                 const newDiceElements = document.querySelectorAll('.new-dice');
                 newDiceElements.forEach((dice, index) => {
