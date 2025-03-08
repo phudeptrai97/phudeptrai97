@@ -306,6 +306,9 @@
         let isShaking = false;
         let previousResults = [];
         let newResults = [];
+        let previousDice2Result = 0; // Lưu trữ kết quả xúc xắc 2 của ván trước
+        let previousDice3Result = 0; // Lưu trữ kết quả xúc xắc 3 của ván trước
+        let gameRound = 0; // Đếm số ván chơi
 
         // Hàm bắt đầu game
         function startGame() {
@@ -361,11 +364,28 @@
                 cup.classList.add("shake-cup");
                 isShaking = true;
 
-                newResults = [
-                    Math.floor(Math.random() * 6),
-                    Math.floor(Math.random() * 6),
-                    Math.floor(Math.random() * 6)
-                ];
+                // Tạo kết quả ngẫu nhiên cho xúc xắc 1 và 2
+                const result1 = Math.floor(Math.random() * 6) + 1; // 1-6
+                const result2 = Math.floor(Math.random() * 6) + 1; // 1-6
+
+                let result3;
+                if (gameRound < 2) {
+                    // Ván 1 và 2: Xúc xắc 3 ngẫu nhiên
+                    result3 = Math.floor(Math.random() * 6) + 1; // 1-6
+                } else {
+                    // Từ ván 3 trở đi: Áp dụng quy luật
+                    result3 = (previousDice2Result + previousDice3Result);
+                    if (result3 > 6) {
+                        result3 = result3 - 6; // Nếu vượt quá 6, trừ đi 6 để quay lại 1-6
+                    }
+                }
+
+                // Lưu kết quả xúc xắc 2 và 3 của ván hiện tại để sử dụng cho ván sau
+                previousDice2Result = result2;
+                previousDice3Result = result3;
+
+                newResults = [result1, result2, result3];
+                gameRound++; // Tăng số ván chơi
 
                 setTimeout(() => {
                     fadeOutAudio(rollSound, 1000);
@@ -382,7 +402,7 @@
 
                 const newDiceElements = document.querySelectorAll('.new-dice');
                 newDiceElements.forEach((dice, index) => {
-                    const result = newResults[index];
+                    const result = newResults[index] - 1; // Chuyển từ 1-6 sang 0-5 để phù hợp với mảng images
                     dice.innerHTML = `<img src="${images[result]}" alt="result">`;
                 });
             }, 1000);
@@ -393,9 +413,9 @@
 
             if (newResults.length > 0) {
                 previousResults = newResults;
-                resultContainer.innerHTML = previousResults.map(i => `<img src="${images[i]}" alt="result" class="highlight">`).join('');
+                resultContainer.innerHTML = previousResults.map(i => `<img src="${images[i - 1]}" alt="result" class="highlight">`).join('');
                 previousResults.forEach(result => {
-                    diceElements[result].classList.add('highlight');
+                    diceElements[result - 1].classList.add('highlight');
                 });
             } else {
                 resultContainer.innerHTML = `
