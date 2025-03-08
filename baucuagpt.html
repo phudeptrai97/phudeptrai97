@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Bầu Cua Tôm Cá</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: maroon;
+            color: white;
+        }
+        h1 {
+            margin-top: 20px;
+        }
+        .plate-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            position: relative;
+        }
+
+        .plate {
+            width: 200px;
+            height: 200px;
+            background-image: url('your_plate_image.png'); /* Thay bằng hình ảnh đĩa bạn đã chuẩn bị */
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            cursor: grab;
+            position: relative;
+        }
+
+        .new-dice-container {
+            display: none; /* Ban đầu ẩn xúc xắc */
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .new-dice {
+            width: 100px;
+            height: 100px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 2s ease-out;
+        }
+
+        .new-dice img {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            border: 2px solid #000;
+            border-radius: 10px;
+            backface-visibility: hidden;
+        }
+
+        .new-dice img:nth-child(1) { transform: translateZ(50px); }
+        .new-dice img:nth-child(2) { transform: rotateX(180deg) translateZ(50px); }
+        .new-dice img:nth-child(3) { transform: rotateY(90deg) translateZ(50px); }
+        .new-dice img:nth-child(4) { transform: rotateY(-90deg) translateZ(50px); }
+        .new-dice img:nth-child(5) { transform: rotateX(90deg) translateZ(50px); }
+        .new-dice img:nth-child(6) { transform: rotateX(-90deg) translateZ(50px); }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #FFD700;
+            color: black;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #DAA520;
+        }
+
+        .result-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .result-container img {
+            width: 100px;
+            height: 100px;
+            margin: 5px;
+        }
+
+        .highlight {
+            border-color: gold;
+            border-width: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Game Bầu Cua Tôm Cá</h1>
+    <audio id="backgroundMusic" loop>
+        <source src="music.mp3" type="audio/mpeg">
+        Trình duyệt của bạn không hỗ trợ phát nhạc.
+    </audio>
+    <audio id="rollSound">
+        <source src="roll.mp3" type="audio/mpeg">
+        Trình duyệt của bạn không hỗ trợ âm thanh.
+    </audio>
+    <audio id="endSound">
+        <source src="end.mp3" type="audio/mpeg">
+        Trình duyệt của bạn không hỗ trợ âm thanh.
+    </audio>
+
+    <button onclick="toggleMusic()">Bật / Tắt Nhạc</button>
+
+    <!-- Phần kết quả -->
+    <div class="result-container" id="resultContainer"></div>
+
+    <!-- Phần bộ đĩa chén với xúc xắc -->
+    <div class="plate-container" id="plateContainer">
+        <div class="plate" id="plate" draggable="true" ondragstart="startDrag(event)" ondragend="endDrag(event)">
+            <div class="new-dice-container" id="diceContainer">
+                <!-- 3 xúc xắc được giữ trong bộ đĩa -->
+                <div class="new-dice" id="newDice1">
+                    <img src="bau.png" alt="Bầu">
+                    <img src="cua.png" alt="Cua">
+                    <img src="ca.png" alt="Tôm">
+                    <img src="tom.png" alt="Cá">
+                    <img src="nai.png" alt="Gà">
+                    <img src="ga.png" alt="Nai">
+                </div>
+                <div class="new-dice" id="newDice2">
+                    <img src="bau.png" alt="Bầu">
+                    <img src="cua.png" alt="Cua">
+                    <img src="ca.png" alt="Tôm">
+                    <img src="tom.png" alt="Cá">
+                    <img src="nai.png" alt="Gà">
+                    <img src="ga.png" alt="Nai">
+                </div>
+                <div class="new-dice" id="newDice3">
+                    <img src="bau.png" alt="Bầu">
+                    <img src="cua.png" alt="Cua">
+                    <img src="ca.png" alt="Tôm">
+                    <img src="tom.png" alt="Cá">
+                    <img src="nai.png" alt="Gà">
+                    <img src="ga.png" alt="Nai">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const images = ["bau.png", "cua.png", "tom.png", "ca.png", "ga.png", "nai.png"];
+        const backgroundMusic = document.getElementById("backgroundMusic");
+        const rollSound = document.getElementById("rollSound");
+        const endSound = document.getElementById("endSound");
+
+        let isDiceRolled = false; // Biến để kiểm tra trạng thái lắc xúc xắc
+
+        // Điều khiển nhạc nền
+        function toggleMusic() {
+            if (backgroundMusic.paused) {
+                backgroundMusic.play();
+            } else {
+                backgroundMusic.pause();
+            }
+        }
+
+        // Bắt đầu kéo đĩa
+        function startDrag(event) {
+            event.dataTransfer.setData("text", event.target.id);
+        }
+
+        // Kết thúc kéo đĩa và mở chén
+        function endDrag(event) {
+            if (!isDiceRolled) {
+                // Lắc xúc xắc
+                rollDice();
+                document.getElementById("diceContainer").classList.remove("hidden");
+                isDiceRolled = true;
+            } else {
+                alert("Hãy mở chén để xem kết quả!");
+            }
+        }
+
+        // Hàm lắc xúc xắc và tạo kết quả ngẫu nhiên
+        function rollDice() {
+            rollSound.play();
+            rollSound.volume = 1;
+
+            let diceElements = document.querySelectorAll(".new-dice");
+            diceElements.forEach(dice => {
+                dice.classList.add("blinking");
+            });
+
+            // Tạo kết quả ngẫu nhiên
+            const results = [
+                Math.floor(Math.random() * 6),
+                Math.floor(Math.random() * 6),
+                Math.floor(Math.random() * 6)
+            ];
+
+            // Phát âm thanh kết thúc
+            setTimeout(() => {
+                endSound.play();
+            }, 2000); // Kết thúc lắc sau 2 giây
+
+            return results;
+        }
+    </script>
+</body>
+</html>
