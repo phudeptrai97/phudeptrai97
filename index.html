@@ -12,12 +12,20 @@
             color: white;
             margin: 0;
             overflow: hidden;
+            /* Thêm hiệu ứng lấp lánh từ file Snow.gif */
+            background-image: url('Snow.gif');
+            background-size: cover; /* Đảm bảo GIF phủ kín nền */
+            background-position: center; /* Căn giữa GIF */
+            background-repeat: no-repeat; /* Không lặp lại GIF */
+            background-attachment: fixed; /* Cố định nền khi cuộn trang */
         }
         .game-container {
             display: flex;
             flex-direction: column;
             align-items: center;
             margin-top: 20px;
+            position: relative;
+            z-index: 2; /* Đảm bảo game nằm trên hiệu ứng lấp lánh */
         }
         .dice-grid {
             display: grid;
@@ -118,20 +126,20 @@
             border-radius: 10px;
             backface-visibility: hidden;
         }
-				/* Vị trí của 3 xúc xắc */
-		.new-dice:nth-child(1) {
-			top: calc(50% - 20px); /* Dịch lên trên */
-			left: 50%;
-		}
-		.new-dice:nth-child(2) {
-			top: calc(50% + 30px); /* Dịch xuống dưới và sang trái */
-			left: calc(50% - 70px); 
-		}
-		.new-dice:nth-child(3) {
-			top: calc(50% + 30px); /* Dịch xuống dưới và sang phải */
-			left: calc(50% + 30px); /* 52px = 60px * cos(30°) */
-		}
-		
+        /* Vị trí của 3 xúc xắc */
+        .new-dice:nth-child(1) {
+            top: calc(50% - 20px); /* Dịch lên trên */
+            left: 50%;
+        }
+        .new-dice:nth-child(2) {
+            top: calc(50% + 30px); /* Dịch xuống dưới và sang trái */
+            left: calc(50% - 70px); 
+        }
+        .new-dice:nth-child(3) {
+            top: calc(50% + 30px); /* Dịch xuống dưới và sang phải */
+            left: calc(50% + 30px); /* 52px = 60px * cos(30°) */
+        }
+
         .plate {
             position: absolute;
             top: 50%;
@@ -201,7 +209,7 @@
             <img class="dice" src="ga.png" id="dice5">
             <img class="dice" src="nai.png" id="dice6">
         </div>
-        <button onclick="rollDice()">Lắc Xúc Xắc</button>
+        <button id="rollButton" onclick="rollDice()">Lắc Xúc Xắc</button>
     </div>
 
     <script>
@@ -213,6 +221,7 @@
         const plate = document.getElementById("plate");
         const resultContainer = document.getElementById("resultContainer");
         const diceElements = document.querySelectorAll('.dice');
+        const rollButton = document.getElementById("rollButton");
 
         backgroundMusic.volume = 0.5;
 
@@ -282,6 +291,10 @@
                     cup.classList.remove("shake-cup");
                     isShaking = false;
                     diceElements.forEach(dice => dice.classList.remove('blinking'));
+
+                    // Đổi nút "Lắc Xúc Xắc" thành nút "Mở"
+                    rollButton.textContent = "Mở";
+                    rollButton.onclick = openCup;
                 }, 2000);
 
                 // Cập nhật hình ảnh xúc xắc
@@ -293,7 +306,7 @@
             }, 1000);
         }
 
-        cup.addEventListener('click', () => {
+        function openCup() {
             if (isShaking) return;
 
             // Nếu có kết quả mới, cập nhật và hiển thị
@@ -315,7 +328,13 @@
             cup.style.opacity = 0;
             plate.style.opacity = 1;
             endSound.play();
-        });
+
+            // Đổi nút "Mở" thành nút "Lắc Xúc Xắc"
+            rollButton.textContent = "Lắc Xúc Xắc";
+            rollButton.onclick = rollDice;
+        }
+
+        cup.addEventListener('click', openCup);
     </script>
 </body>
 </html>
