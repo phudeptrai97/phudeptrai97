@@ -56,15 +56,15 @@
         }
 
         /* Hình ảnh trang trí tree.gif */
-		.gif-container {
-			position: relative;
-			margin-right: 350px;
-		}
+        .gif-container {
+            position: relative;
+            margin-right: 350px;
+        }
         .tree-decoration {
             position: fixed;
             width: 150px; /* Kích thước 100px */
             height: auto;
-            z-index: 9999; /* Đảm bảo hiển thị trên các phần tử khác */
+            z-index: 1003; /* Đảm bảo hiển thị trên các phần tử khác */
         }
         .game-container {
             display: flex;
@@ -83,8 +83,8 @@
         }
 
         .dice {
-            width: 100px;
-            height: 100px;
+            width: 90px;
+            height: 90px;
             border: 2px solid #000;
             border-radius: 10px;
             transition: border-color 0.3s, border-width 0.3s;
@@ -112,9 +112,9 @@
         }
 
         .result-container img {
-            width: 100px;
-            height: 100px;
-            margin: 5px;
+            width: 90px;
+            height: 90px;
+            margin: 4px;
         }
 
         button {
@@ -141,8 +141,8 @@
 
         .cup {
             position: absolute;
-            width: 335px;
-            height: 258px;
+            width: 300px;
+            height: 225px;
             background-image: url('cup.png');
             background-size: contain;
             background-position: center;
@@ -179,8 +179,8 @@
         }
 
         .new-dice img {
-            width: 100%;
-            height: 100%;
+            width: 95%;
+            height: 95%;
             position: absolute;
             border: 2px solid #000;
             border-radius: 10px;
@@ -199,7 +199,7 @@
 
         .new-dice:nth-child(3) {
             top: calc(50% + 30px);
-            left: calc(50% + 30px);
+            left: calc(50% + 10px);
         }
 
         .plate {
@@ -226,35 +226,25 @@
             animation: shake 0.2s ease-in-out;
         }
 
-		.control-btn {
-			display: flex;
-			justify-content: center;
-			
-		}
-        /* Style cho nút Back */
-        .back-button {
-            width: 45px; /* Kích thước bằng 1/10 quân xúc xắc */
+        /* Style cho nút Back và Volume */
+        .control-buttons {
+            position: absolute;
+            top: 380px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 200px;
+            z-index: 3;
+        }
+
+        .back-button, .volume-button {
+            width: 45px;
             height: 45px;
-			margin-right: 120px;
             cursor: pointer;
-            z-index: 3; /* Đảm bảo hiển thị trên lớp cup */
         }
 
-        .back-button:hover {
-            opacity: 0.8; /* Hiệu ứng khi di chuột qua */
-        }
-
-        /* Style cho nút tắt/mở nhạc nền */
-        .volume-button {
-            width: 45px; /* Kích thước 10x10px */
-            height: 45px;
-			margin-left: 120px;
-            cursor: pointer;
-            z-index: 3; /* Đảm bảo hiển thị trên lớp cup */
-        }
-
-        .volume-button:hover {
-            opacity: 0.8; /* Hiệu ứng khi di chuột qua */
+        .back-button:hover, .volume-button:hover {
+            opacity: 0.8;
         }
     </style>
 </head>
@@ -267,8 +257,6 @@
 
     <!-- Giao diện game bên trong -->
     <div class="game-content hidden" id="gameContent">
-        
-
         <!-- Các phần tử khác của game -->
         <audio id="backgroundMusic" loop>
             <source src="music.mp3" type="audio/mpeg">
@@ -283,19 +271,18 @@
             Trình duyệt của bạn không hỗ trợ âm thanh.
         </audio>
 
+        <!-- Nút Back và Volume -->
+        <div class="control-buttons">
+            <img src="backbutton.png" alt="Back" class="back-button" onclick="goBack()">
+            <img src="volum.png" alt="Volume" class="volume-button" id="volumeButton" onclick="toggleMusic()">
+        </div>
+
         <div class="result-container" id="resultContainer">
             <img src="bau.png" alt="Bầu">
             <img src="bau.png" alt="Bầu">
             <img src="bau.png" alt="Bầu">
         </div>
-		<div class="control-btn">
-		<!-- Nút Back -->
-        <img src="backbutton.png" alt="Back" class="back-button" onclick="goBack()">
 
-        <!-- Nút tắt/mở nhạc nền -->
-        <img src="volum.png" alt="Volume" class="volume-button" id="volumeButton" onclick="toggleMusic()">
-		</div>
-		
         <div class="cup-container">
             <div class="cup" id="cup"></div>
             <div class="new-dice-container">
@@ -310,11 +297,10 @@
                     <img src="tom.png" alt="Tôm">
                 </div>
             </div>
-			<!-- Hình ảnh trang trí tree.gif -->
-			<div class="gif-container">
-			<img src="tree.gif" alt="Tree" class="tree-decoration">
-			</div>
-		
+            <!-- Hình ảnh trang trí tree.gif -->
+            <div class="gif-container">
+                <img src="tree.gif" alt="Tree" class="tree-decoration">
+            </div>
         </div>
 
         <button id="rollButton" onclick="rollDice()">Lắc Xúc Xắc</button>
