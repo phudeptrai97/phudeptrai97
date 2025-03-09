@@ -56,19 +56,16 @@
         }
 
         /* Hình ảnh trang trí tree.gif */
+		.gif-container {
+			position: relative;
+			margin-right: 350px;
+		}
         .tree-decoration {
             position: fixed;
             width: 150px; /* Kích thước 100px */
             height: auto;
-            z-index: 1001; /* Đảm bảo hiển thị trên các phần tử khác */
+            z-index: 9999; /* Đảm bảo hiển thị trên các phần tử khác */
         }
-
-        /* Vị trí của tree.gif */
-        .tree-decoration.top-left {
-            top: 220px;
-            left: 20px;
-        }
-
         .game-container {
             display: flex;
             flex-direction: column;
@@ -226,16 +223,19 @@
         }
 
         .shake-cup {
-            animation: shake 0.5s ease-in-out;
+            animation: shake 0.2s ease-in-out;
         }
 
+		.control-btn {
+			display: flex;
+			justify-content: center;
+			
+		}
         /* Style cho nút Back */
         .back-button {
-            position: fixed;
-            top: 140px; /* Vị trí trên cùng */
-            left: 610px; /* Vị trí bên trái */
-            width: 30px; /* Kích thước bằng 1/10 quân xúc xắc */
-            height: 30px;
+            width: 45px; /* Kích thước bằng 1/10 quân xúc xắc */
+            height: 45px;
+			margin-right: 120px;
             cursor: pointer;
             z-index: 3; /* Đảm bảo hiển thị trên lớp cup */
         }
@@ -246,11 +246,9 @@
 
         /* Style cho nút tắt/mở nhạc nền */
         .volume-button {
-            position: fixed;
-            top: 140px; /* Vị trí trên cùng */
-            right: 610px; /* Vị trí bên phải */
-            width: 30px; /* Kích thước 10x10px */
-            height: 30px;
+            width: 45px; /* Kích thước 10x10px */
+            height: 45px;
+			margin-left: 120px;
             cursor: pointer;
             z-index: 3; /* Đảm bảo hiển thị trên lớp cup */
         }
@@ -261,8 +259,6 @@
     </style>
 </head>
 <body>
-    <!-- Hình ảnh trang trí tree.gif -->
-    <img src="tree.gif" alt="Tree" class="tree-decoration top-left">
 
     <!-- Giao diện bên ngoài -->
     <div class="overlay" id="overlay">
@@ -271,11 +267,7 @@
 
     <!-- Giao diện game bên trong -->
     <div class="game-content hidden" id="gameContent">
-        <!-- Nút Back -->
-        <img src="backbutton.png" alt="Back" class="back-button" onclick="goBack()">
-
-        <!-- Nút tắt/mở nhạc nền -->
-        <img src="volum.png" alt="Volume" class="volume-button" id="volumeButton" onclick="toggleMusic()">
+        
 
         <!-- Các phần tử khác của game -->
         <audio id="backgroundMusic" loop>
@@ -296,6 +288,14 @@
             <img src="bau.png" alt="Bầu">
             <img src="bau.png" alt="Bầu">
         </div>
+		<div class="control-btn">
+		<!-- Nút Back -->
+        <img src="backbutton.png" alt="Back" class="back-button" onclick="goBack()">
+
+        <!-- Nút tắt/mở nhạc nền -->
+        <img src="volum.png" alt="Volume" class="volume-button" id="volumeButton" onclick="toggleMusic()">
+		</div>
+		
         <div class="cup-container">
             <div class="cup" id="cup"></div>
             <div class="new-dice-container">
@@ -310,6 +310,11 @@
                     <img src="tom.png" alt="Tôm">
                 </div>
             </div>
+			<!-- Hình ảnh trang trí tree.gif -->
+			<div class="gif-container">
+			<img src="tree.gif" alt="Tree" class="tree-decoration">
+			</div>
+		
         </div>
 
         <button id="rollButton" onclick="rollDice()">Lắc Xúc Xắc</button>
@@ -340,6 +345,7 @@
         const volumeButton = document.getElementById("volumeButton");
 
         backgroundMusic.volume = 0.1;
+        endSound.volume = 0.2;
 
         let isShaking = false;
         let previousResults = [];
@@ -446,14 +452,14 @@
 
                     rollButton.textContent = "Mở";
                     rollButton.onclick = openCup;
-                }, 1000);
+                }, 500);
 
                 const newDiceElements = document.querySelectorAll('.new-dice');
                 newDiceElements.forEach((dice, index) => {
                     const result = newResults[index] - 1; // Chuyển từ 1-6 sang 0-5 để phù hợp với mảng images
                     dice.innerHTML = `<img src="${images[result]}" alt="result">`;
                 });
-            }, 1000);
+            }, 10);
         }
 
         function openCup() {
